@@ -13,16 +13,18 @@ func main() {
 	todoList := todolist.NewToDoList()
 	scanner := bufio.NewScanner(os.Stdin)
 
+	todoList.AutoLoad()
+
 	for {
 		fmt.Println("\nTo-Do App")
 		fmt.Println("1. Add Task")
 		fmt.Println("2. View Tasks")
 		fmt.Println("3. Complete Task")
 		fmt.Println("4. Delete Task")
-		fmt.Println("5. Save Tasks")
-		fmt.Println("6. Load Tasks")
+		fmt.Println("5. Export Tasks")
+		fmt.Println("6. Import Tasks")
 		fmt.Println("7. Exit")
-		fmt.Print("Choose an option: ")
+		fmt.Print("Choose an option: \n")
 
 		scanner.Scan()
 		choice := scanner.Text()
@@ -43,6 +45,8 @@ func main() {
 			}
 
 			todoList.AddTask(title, dueDate)
+			todoList.AutoSave()
+
 		case "2":
 			todoList.ViewTasks()
 		case "3":
@@ -56,6 +60,8 @@ func main() {
 			if err := todoList.CompleteTask(id); err != nil {
 				fmt.Println(err)
 			}
+			todoList.AutoSave()
+
 		case "4":
 			fmt.Print("Enter task ID to delete: ")
 			scanner.Scan()
@@ -67,15 +73,18 @@ func main() {
 			if err := todoList.DeleteTask(id); err != nil {
 				fmt.Println(err)
 			}
+			todoList.AutoSave()
+
 		case "5":
-			fmt.Print("Enter filename to save tasks: ")
+			fmt.Print("Enter filename to export tasks: ")
 			scanner.Scan()
 			filename := scanner.Text()
 			if err := todoList.SaveTasks(filename); err != nil {
 				fmt.Println(err)
 			}
+
 		case "6":
-			fmt.Print("Enter filename to load tasks: ")
+			fmt.Print("Enter filename to import tasks: ")
 			scanner.Scan()
 			filename := scanner.Text()
 			if err := todoList.LoadTasks(filename); err != nil {

@@ -78,6 +78,13 @@ func (todolist *ToDoList) SaveTasks(filename string) error {
 	return nil
 }
 
+func (todolist *ToDoList) AutoSave() error {
+	if err := todolist.SaveTasks("auto"); err != nil {
+		return fmt.Errorf("error autosaving to file auto")
+	}
+	return nil
+}
+
 func (todolist *ToDoList) LoadTasks(filename string) error {
 	data, err := os.ReadFile(filename)
 	if err != nil {
@@ -97,5 +104,15 @@ func (todolist *ToDoList) LoadTasks(filename string) error {
 		}
 	}
 	todolist.NextID = maxID + 1
+	return nil
+}
+
+func (todolist *ToDoList) AutoLoad() error {
+	if _, err := os.Stat("auto"); err != nil {
+		os.Create("auto")
+	}
+	if err := todolist.LoadTasks("auto"); err != nil {
+		return fmt.Errorf("error autoloading form file auto")
+	}
 	return nil
 }
